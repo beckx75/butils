@@ -24,6 +24,14 @@ func (tfs TheFiles) Names() []string {
 	return rec
 }
 
+func GetSelectedFilepathes(tfs []*TheFile) []string {
+	rec := []string{}
+	for _, tf := range tfs {
+		rec = append(rec, tf.Path)
+	}
+	return rec
+}
+
 func GetFilenames(tfs []*TheFile) []string {
 	rec := []string{}
 	for _, tf := range tfs {
@@ -70,6 +78,14 @@ func NewTheFile(fp string) *TheFile {
 		Dir:      filepath.Dir(fp),
 		Selected: false,
 	}
+}
+
+func NewTheFileList(files []string) []*TheFile {
+     tfs := []*TheFile{}
+     for _, file := range files {
+         tfs = append(tfs, NewTheFile(file))
+     }
+     return tfs
 }
 
 func AddFile(tfs *[]*TheFile, fp string) {
