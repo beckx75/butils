@@ -1,17 +1,42 @@
 package computils
 
-func CompareStringList(l1, l2 []string) (only1 []string, only2 []string, intersect []string) {
+func CompareStringList(l1, l2 []string) (only1 []string, only2 []string, intersect []string, nuL1 map[string]int, nuL2 map[string]int) {
+	nuL1 = make(map[string]int)
+	nuL2 = make(map[string]int)
 	m1 := make(map[string]bool)
 	m2 := make(map[string]bool)
 
 	for _, e := range l1 {
-		m1[e] = true
+		_, ok := nuL1[e]
+		if ok {
+			nuL1[e]++
+			continue
+		}
+		_, ok = m1[e]
+		if ok {
+			nuL1[e] = 2
+			delete(m1, e)
+		} else {
+			m1[e] = true
+		}
 	}
 	for _, e := range l2 {
-		m2[e] = true
+		_, ok := nuL2[e]
+		if ok {
+			nuL2[e]++
+			continue
+		}
+		_, ok = m2[e]
+		if ok {
+			nuL2[e] = 2
+			delete(m2, e)
+		} else {
+			m2[e] = true
+		}
 	}
 
-	return CompareMapKeys(m1, m2)
+	o1, o2, inter := CompareMapKeys(m1, m2)
+	return o1, o2, inter, nuL1, nuL2
 }
 
 func CompareMapKeys[V any](m1, m2 map[string]V) (only1 []string, only2 []string, intersect []string) {
